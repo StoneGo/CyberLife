@@ -482,6 +482,22 @@ LOCK TABLES `tschedule` WRITE;
 UNLOCK TABLES;
 
 --
+-- Temporary view structure for view `v_pdepend`
+--
+
+DROP TABLE IF EXISTS `v_pdepend`;
+/*!50001 DROP VIEW IF EXISTS `v_pdepend`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `v_pdepend` AS SELECT 
+ 1 AS `pdid`,
+ 1 AS `pid`,
+ 1 AS `dpid`,
+ 1 AS `pname`,
+ 1 AS `dpname`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary view structure for view `v_pghr`
 --
 
@@ -535,6 +551,22 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `content`,
  1 AS `hid`,
  1 AS `rid`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `v_tdepend`
+--
+
+DROP TABLE IF EXISTS `v_tdepend`;
+/*!50001 DROP VIEW IF EXISTS `v_tdepend`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `v_tdepend` AS SELECT 
+ 1 AS `tdid`,
+ 1 AS `tid`,
+ 1 AS `dtid`,
+ 1 AS `tname`,
+ 1 AS `tpname`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -602,6 +634,24 @@ SET character_set_client = @saved_cs_client;
 --
 
 --
+-- Final view structure for view `v_pdepend`
+--
+
+/*!50001 DROP VIEW IF EXISTS `v_pdepend`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`cyberlife`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_pdepend` AS select `pd`.`pdid` AS `pdid`,`pd`.`pid` AS `pid`,`pd`.`dpid` AS `dpid`,`p1`.`pname` AS `pname`,`p2`.`pname` AS `dpname` from ((`pdepend` `pd` join `project` `p1` on((`pd`.`pid` = `p1`.`pid`))) join `project` `p2` on((`pd`.`dpid` = `p2`.`pid`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `v_pghr`
 --
 
@@ -651,6 +701,24 @@ SET character_set_client = @saved_cs_client;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`cyberlife`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `v_phr` AS select `h`.`human` AS `human`,`r`.`rname` AS `rname`,`p`.`pid` AS `pid`,`p`.`pname` AS `pname`,`p`.`content` AS `content`,`phr`.`hid` AS `hid`,`phr`.`rid` AS `rid` from (((`project` `p` join `phr` on((`p`.`pid` = `phr`.`pid`))) join `human` `h` on((`phr`.`hid` = `h`.`hid`))) join `role` `r` on((`phr`.`rid` = `r`.`rid`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_tdepend`
+--
+
+/*!50001 DROP VIEW IF EXISTS `v_tdepend`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`cyberlife`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_tdepend` AS select `td`.`tdid` AS `tdid`,`td`.`tid` AS `tid`,`td`.`dtid` AS `dtid`,`t1`.`tname` AS `tname`,`t2`.`tname` AS `tpname` from ((`tdepend` `td` join `task` `t1` on((`td`.`tid` = `t1`.`tid`))) join `task` `t2` on((`td`.`dtid` = `t2`.`tid`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -718,4 +786,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-13  1:49:35
+-- Dump completed on 2020-06-13  2:06:48
