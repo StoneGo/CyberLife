@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 12/06/2020 20:38:30
+ Date: 12/06/2020 20:38:15
 */
 
 SET NAMES utf8mb4;
@@ -33,6 +33,13 @@ CREATE TABLE `gh`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of gh
+-- ----------------------------
+INSERT INTO `gh` VALUES (1, 1, 1);
+INSERT INTO `gh` VALUES (2, 1, 2);
+INSERT INTO `gh` VALUES (3, 2, 2);
+
+-- ----------------------------
 -- Table structure for group
 -- ----------------------------
 DROP TABLE IF EXISTS `group`;
@@ -44,6 +51,12 @@ CREATE TABLE `group`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of group
+-- ----------------------------
+INSERT INTO `group` VALUES (1, 'Developer', 'Developer');
+INSERT INTO `group` VALUES (2, 'Manager', 'Management');
+
+-- ----------------------------
 -- Table structure for human
 -- ----------------------------
 DROP TABLE IF EXISTS `human`;
@@ -52,6 +65,12 @@ CREATE TABLE `human`  (
   `human` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'human name',
   PRIMARY KEY (`hid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of human
+-- ----------------------------
+INSERT INTO `human` VALUES (1, 'Stone');
+INSERT INTO `human` VALUES (2, 'Star');
 
 -- ----------------------------
 -- Table structure for pgr
@@ -72,6 +91,14 @@ CREATE TABLE `pgr`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of pgr
+-- ----------------------------
+INSERT INTO `pgr` VALUES (1, 1, 1, 1);
+INSERT INTO `pgr` VALUES (2, 2, 1, 1);
+INSERT INTO `pgr` VALUES (3, 3, 1, 1);
+INSERT INTO `pgr` VALUES (4, 1, 2, 2);
+
+-- ----------------------------
 -- Table structure for phr
 -- ----------------------------
 DROP TABLE IF EXISTS `phr`;
@@ -88,6 +115,13 @@ CREATE TABLE `phr`  (
   CONSTRAINT `fk_phr_pid` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_phr_rid` FOREIGN KEY (`rid`) REFERENCES `role` (`rid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of phr
+-- ----------------------------
+INSERT INTO `phr` VALUES (1, 1, 1, 1);
+INSERT INTO `phr` VALUES (2, 2, 1, 1);
+INSERT INTO `phr` VALUES (3, 3, 1, 1);
 
 -- ----------------------------
 -- Table structure for plog
@@ -108,6 +142,15 @@ CREATE TABLE `plog`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of plog
+-- ----------------------------
+INSERT INTO `plog` VALUES (1, 1, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-12 18:44:37');
+INSERT INTO `plog` VALUES (2, 2, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-12 18:44:49');
+INSERT INTO `plog` VALUES (3, 3, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-12 18:44:59');
+INSERT INTO `plog` VALUES (4, 1, 2, 'PGR', 1, 0, 'P1<-G1', '2020-06-12 20:16:54');
+INSERT INTO `plog` VALUES (5, 1, 2, 'PGR', 2, 0, 'P1<-G2', '2020-06-12 20:17:20');
+
+-- ----------------------------
 -- Table structure for project
 -- ----------------------------
 DROP TABLE IF EXISTS `project`;
@@ -117,6 +160,13 @@ CREATE TABLE `project`  (
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Project Content',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of project
+-- ----------------------------
+INSERT INTO `project` VALUES (1, 'Eureka', 'Eureka Math Moduling');
+INSERT INTO `project` VALUES (2, 'Winning', 'Winning Trade Software');
+INSERT INTO `project` VALUES (3, 'SpaceForce', 'SpaceForce IDE (Integrated Development Environment)');
 
 -- ----------------------------
 -- Table structure for pschedule
@@ -140,6 +190,10 @@ CREATE TABLE `pschedule`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of pschedule
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for role
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
@@ -149,6 +203,12 @@ CREATE TABLE `role`  (
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Role Content',
   PRIMARY KEY (`rid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of role
+-- ----------------------------
+INSERT INTO `role` VALUES (1, 'Developer', 'Developer');
+INSERT INTO `role` VALUES (2, 'Manager', 'Management');
 
 -- ----------------------------
 -- Table structure for task
@@ -165,6 +225,12 @@ CREATE TABLE `task`  (
   INDEX `fk_task_parent_task`(`ptid`) USING BTREE,
   CONSTRAINT `fk_task_project` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of task
+-- ----------------------------
+INSERT INTO `task` VALUES (1, 'Moduling Eureka', 1, 'Moduling Eureka', 0);
+INSERT INTO `task` VALUES (2, 'Moduling Trade', 1, 'Moduling Trade', 0);
 
 -- ----------------------------
 -- Table structure for tgr
@@ -185,6 +251,12 @@ CREATE TABLE `tgr`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of tgr
+-- ----------------------------
+INSERT INTO `tgr` VALUES (1, 1, 1, 1);
+INSERT INTO `tgr` VALUES (2, 2, 1, 1);
+
+-- ----------------------------
 -- Table structure for thr
 -- ----------------------------
 DROP TABLE IF EXISTS `thr`;
@@ -203,6 +275,12 @@ CREATE TABLE `thr`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of thr
+-- ----------------------------
+INSERT INTO `thr` VALUES (1, 1, 1, 1);
+INSERT INTO `thr` VALUES (2, 2, 1, 1);
+
+-- ----------------------------
 -- Table structure for tlog
 -- ----------------------------
 DROP TABLE IF EXISTS `tlog`;
@@ -218,6 +296,10 @@ CREATE TABLE `tlog`  (
   INDEX `fk_log_task`(`tid`) USING BTREE,
   CONSTRAINT `fk_log_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tlog
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for tschedule
@@ -239,6 +321,10 @@ CREATE TABLE `tschedule`  (
   CONSTRAINT `fk_tschedule_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_tschedule_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tschedule
+-- ----------------------------
 
 -- ----------------------------
 -- View structure for v_pghr
