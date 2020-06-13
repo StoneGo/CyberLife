@@ -11,11 +11,29 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 13/06/2020 15:21:08
+ Date: 13/06/2020 18:21:18
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for action
+-- ----------------------------
+DROP TABLE IF EXISTS `action`;
+CREATE TABLE `action`  (
+  `aid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Action ID',
+  `aname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Action Name',
+  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Content',
+  `tid` int(0) UNSIGNED NOT NULL COMMENT 'Task ID',
+  PRIMARY KEY (`aid`) USING BTREE,
+  INDEX `fk_action_task`(`tid`) USING BTREE,
+  CONSTRAINT `fk_action_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of action
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for gh
