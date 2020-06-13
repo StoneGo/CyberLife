@@ -1,17 +1,17 @@
 /*
- Navicat Premium Data Transfer
+ Navicat MySQL Data Transfer
 
- Source Server         : CyberLife
+ Source Server         : cyberlife
  Source Server Type    : MySQL
  Source Server Version : 80020
- Source Host           : localhost:33996
+ Source Host           : localhost:33369
  Source Schema         : cyberlife
 
  Target Server Type    : MySQL
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 12/06/2020 20:38:15
+ Date: 13/06/2020 15:21:08
 */
 
 SET NAMES utf8mb4;
@@ -26,11 +26,11 @@ CREATE TABLE `gh`  (
   `gid` int(0) UNSIGNED NOT NULL,
   `hid` int(0) UNSIGNED NOT NULL,
   PRIMARY KEY (`ghid`) USING BTREE,
-  INDEX `fk_gh_human`(`hid`) USING BTREE,
   UNIQUE INDEX `uq_gh__gid_hid`(`gid`, `hid`) USING BTREE,
+  INDEX `fk_gh_human`(`hid`) USING BTREE,
   CONSTRAINT `fk_gh_group` FOREIGN KEY (`gid`) REFERENCES `group` (`gid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_gh_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of gh
@@ -48,7 +48,7 @@ CREATE TABLE `group`  (
   `gname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Group Name',
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Group Content',
   PRIMARY KEY (`gid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of group
@@ -64,13 +64,33 @@ CREATE TABLE `human`  (
   `hid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'human id',
   `human` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'human name',
   PRIMARY KEY (`hid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of human
 -- ----------------------------
 INSERT INTO `human` VALUES (1, 'Stone');
 INSERT INTO `human` VALUES (2, 'Star');
+
+-- ----------------------------
+-- Table structure for pdepend
+-- ----------------------------
+DROP TABLE IF EXISTS `pdepend`;
+CREATE TABLE `pdepend`  (
+  `pdid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `pid` int(0) UNSIGNED NOT NULL DEFAULT 0,
+  `dpid` int(0) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`pdid`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of pdepend
+-- ----------------------------
+INSERT INTO `pdepend` VALUES (1, 1, 5);
+INSERT INTO `pdepend` VALUES (2, 2, 5);
+INSERT INTO `pdepend` VALUES (3, 3, 5);
+INSERT INTO `pdepend` VALUES (4, 2, 1);
+INSERT INTO `pdepend` VALUES (5, 3, 1);
 
 -- ----------------------------
 -- Table structure for pgr
@@ -88,7 +108,7 @@ CREATE TABLE `pgr`  (
   CONSTRAINT `fk_pgr_gid` FOREIGN KEY (`gid`) REFERENCES `group` (`gid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_pgr_pid` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_pgr_rid` FOREIGN KEY (`rid`) REFERENCES `role` (`rid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of pgr
@@ -114,7 +134,7 @@ CREATE TABLE `phr`  (
   CONSTRAINT `fk_phr_hid` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_phr_pid` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_phr_rid` FOREIGN KEY (`rid`) REFERENCES `role` (`rid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of phr
@@ -139,7 +159,7 @@ CREATE TABLE `plog`  (
   PRIMARY KEY (`lid`) USING BTREE,
   INDEX `fk_log_task`(`pid`) USING BTREE,
   CONSTRAINT `fk_plog_project` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of plog
@@ -158,15 +178,19 @@ CREATE TABLE `project`  (
   `pid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Project ID',
   `pname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Project Name',
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Project Content',
+  `pptype` enum('public','private') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'public',
+  `repository` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
   PRIMARY KEY (`pid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of project
 -- ----------------------------
-INSERT INTO `project` VALUES (1, 'Eureka', 'Eureka Math Moduling');
-INSERT INTO `project` VALUES (2, 'Winning', 'Winning Trade Software');
-INSERT INTO `project` VALUES (3, 'SpaceForce', 'SpaceForce IDE (Integrated Development Environment)');
+INSERT INTO `project` VALUES (1, 'Eureka', 'Eureka Math Moduling', 'public', '');
+INSERT INTO `project` VALUES (2, 'Winning', 'Winning Trade Software', 'public', '');
+INSERT INTO `project` VALUES (3, 'SpaceForce', 'SpaceForce IDE (Integrated Development Environment)', 'public', '');
+INSERT INTO `project` VALUES (4, 'Numen', 'Bodyguard Of The System', 'public', '');
+INSERT INTO `project` VALUES (5, 'Painting', 'The Visullazation Componets And Framework', 'public', '');
 
 -- ----------------------------
 -- Table structure for pschedule
@@ -187,7 +211,7 @@ CREATE TABLE `pschedule`  (
   INDEX `fk_pshedule_human`(`hid`) USING BTREE,
   CONSTRAINT `fk_pschedule_project` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_pshedule_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of pschedule
@@ -202,7 +226,7 @@ CREATE TABLE `role`  (
   `rname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Role Name',
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Role Content',
   PRIMARY KEY (`rid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of role
@@ -220,17 +244,34 @@ CREATE TABLE `task`  (
   `pid` int(0) UNSIGNED NOT NULL COMMENT 'Project ID',
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Task Content',
   `ptid` int(0) UNSIGNED NULL DEFAULT 0 COMMENT 'Parent Task ID',
+  `iid` int(0) UNSIGNED NULL DEFAULT 0,
+  `iuri` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
   PRIMARY KEY (`tid`) USING BTREE,
   INDEX `fk_task_project`(`pid`) USING BTREE,
   INDEX `fk_task_parent_task`(`ptid`) USING BTREE,
   CONSTRAINT `fk_task_project` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES (1, 'Moduling Eureka', 1, 'Moduling Eureka', 0);
-INSERT INTO `task` VALUES (2, 'Moduling Trade', 1, 'Moduling Trade', 0);
+INSERT INTO `task` VALUES (1, 'Moduling Eureka', 1, 'Moduling Eureka', 0, 0, '');
+INSERT INTO `task` VALUES (2, 'Moduling Trade', 1, 'Moduling Trade', 0, 0, '');
+
+-- ----------------------------
+-- Table structure for tdepend
+-- ----------------------------
+DROP TABLE IF EXISTS `tdepend`;
+CREATE TABLE `tdepend`  (
+  `tdid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tid` int(0) UNSIGNED NOT NULL DEFAULT 0,
+  `dtid` int(0) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`tdid`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tdepend
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for tgr
@@ -245,10 +286,10 @@ CREATE TABLE `tgr`  (
   INDEX `fk_thr_group`(`tid`) USING BTREE,
   INDEX `fk_tgr_group`(`gid`) USING BTREE,
   INDEX `fk_tgr_role`(`rid`) USING BTREE,
-  CONSTRAINT `fk_thr_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_tgr_group` FOREIGN KEY (`gid`) REFERENCES `group` (`gid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `fk_tgr_role` FOREIGN KEY (`rid`) REFERENCES `role` (`rid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `fk_tgr_role` FOREIGN KEY (`rid`) REFERENCES `role` (`rid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_thr_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tgr
@@ -272,7 +313,7 @@ CREATE TABLE `thr`  (
   CONSTRAINT `fk_th_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_th_rid` FOREIGN KEY (`rid`) REFERENCES `role` (`rid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_th_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of thr
@@ -295,7 +336,7 @@ CREATE TABLE `tlog`  (
   PRIMARY KEY (`lid`) USING BTREE,
   INDEX `fk_log_task`(`tid`) USING BTREE,
   CONSTRAINT `fk_log_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tlog
@@ -320,17 +361,23 @@ CREATE TABLE `tschedule`  (
   INDEX `fk_tschedule_human`(`hid`) USING BTREE,
   CONSTRAINT `fk_tschedule_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_tschedule_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tschedule
 -- ----------------------------
 
 -- ----------------------------
+-- View structure for v_pdepend
+-- ----------------------------
+DROP VIEW IF EXISTS `v_pdepend`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_pdepend` AS select `pd`.`pdid` AS `pdid`,`pd`.`pid` AS `pid`,`pd`.`dpid` AS `dpid`,`p1`.`pname` AS `pname`,`p2`.`pname` AS `dpname` from ((`pdepend` `pd` join `project` `p1` on((`pd`.`pid` = `p1`.`pid`))) join `project` `p2` on((`pd`.`dpid` = `p2`.`pid`)));
+
+-- ----------------------------
 -- View structure for v_pghr
 -- ----------------------------
 DROP VIEW IF EXISTS `v_pghr`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_pghr` AS select `p`.`pid` AS `pid`,`p`.`pname` AS `pname`,`p`.`content` AS `pcontent`,`h`.`human` AS `human`,`r`.`rname` AS `rname`,`r`.`content` AS `rcontent`,`g`.`gname` AS `gname`,`pgr`.`gid` AS `gid`,`pgr`.`rid` AS `rid`,`h`.`hid` AS `hid` from (((((`project` `p` join `pgr` on((`p`.`pid` = `pgr`.`pid`))) join `group` `g` on((`pgr`.`gid` = `g`.`gid`))) join `gh` on((`g`.`gid` = `gh`.`gid`))) join `human` `h` on((`gh`.`hid` = `h`.`hid`))) join `role` `r` on((`pgr`.`rid` = `r`.`rid`)));
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_pghr` AS select `p`.`pid` AS `pid`,`p`.`pname` AS `pname`,`p`.`content` AS `pcontent`,`h`.`human` AS `human`,`r`.`rname` AS `rname`,`r`.`content` AS `rcontent`,`g`.`gname` AS `gname`,`pgr`.`gid` AS `gid`,`pgr`.`rid` AS `rid`,`h`.`hid` AS `hid`,`p`.`repository` AS `repository`,`p`.`pptype` AS `pptype` from (((((`project` `p` join `pgr` on((`p`.`pid` = `pgr`.`pid`))) join `group` `g` on((`pgr`.`gid` = `g`.`gid`))) join `gh` on((`g`.`gid` = `gh`.`gid`))) join `human` `h` on((`gh`.`hid` = `h`.`hid`))) join `role` `r` on((`pgr`.`rid` = `r`.`rid`)));
 
 -- ----------------------------
 -- View structure for v_pgr
@@ -343,6 +390,12 @@ CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_pgr` AS select `pgr`.`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_phr`;
 CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_phr` AS select `h`.`human` AS `human`,`r`.`rname` AS `rname`,`p`.`pid` AS `pid`,`p`.`pname` AS `pname`,`p`.`content` AS `content`,`phr`.`hid` AS `hid`,`phr`.`rid` AS `rid` from (((`project` `p` join `phr` on((`p`.`pid` = `phr`.`pid`))) join `human` `h` on((`phr`.`hid` = `h`.`hid`))) join `role` `r` on((`phr`.`rid` = `r`.`rid`)));
+
+-- ----------------------------
+-- View structure for v_tdepend
+-- ----------------------------
+DROP VIEW IF EXISTS `v_tdepend`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_tdepend` AS select `td`.`tdid` AS `tdid`,`td`.`tid` AS `tid`,`td`.`dtid` AS `dtid`,`t1`.`tname` AS `tname`,`t2`.`tname` AS `tpname` from ((`tdepend` `td` join `task` `t1` on((`td`.`tid` = `t1`.`tid`))) join `task` `t2` on((`td`.`dtid` = `t2`.`tid`)));
 
 -- ----------------------------
 -- View structure for v_tghr
