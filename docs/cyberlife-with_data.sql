@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 14/06/2020 19:26:53
+ Date: 14/06/2020 22:25:18
 */
 
 SET NAMES utf8mb4;
@@ -41,8 +41,8 @@ CREATE TABLE `action`  (
 -- Records of action
 -- ----------------------------
 INSERT INTO `action` VALUES (1, 2, 'Design Cyberlife database', 'Design Cyberlife database', 5, 10, '2020-06-14 15:30:36', '2020-06-14 16:01:48');
-INSERT INTO `action` VALUES (2, 3, 'Maintenance Data For Ballet', 'Design Cyberlife database', 4, 0, '2020-06-14 16:05:13', NULL);
-INSERT INTO `action` VALUES (3, 4, 'Debug CloudLab', 'Debug CloudLab', 6, 0, '2020-06-14 15:45:21', '2020-06-14 17:00:30');
+INSERT INTO `action` VALUES (2, 3, 'Find The Data In TBplus And HD', 'Find The Data In TBplus And HD', 4, 0, '2020-06-14 21:51:45', NULL);
+INSERT INTO `action` VALUES (3, 4, 'Debug CloudLab', 'Debug CloudLab', 6, 0, '2020-06-14 15:45:21', '2020-06-14 19:00:30');
 
 -- ----------------------------
 -- Table structure for behavior
@@ -375,10 +375,16 @@ CREATE TABLE `task`  (
 -- ----------------------------
 INSERT INTO `task` VALUES (1, 'Moduling Eureka', 1, 'Moduling Eureka', 0, 0, '');
 INSERT INTO `task` VALUES (2, 'Moduling Trade', 1, 'Moduling Trade', 0, 0, '');
-INSERT INTO `task` VALUES (3, 'Basic Data Service', 2, 'Trans Data From TBplus To csv, then covert to tick bin', 0, 0, '');
+INSERT INTO `task` VALUES (3, 'Maintenance Data For Ballet', 2, 'Trans Data From TBplus To csv, then covert to tick bin', 0, 0, '');
 INSERT INTO `task` VALUES (4, 'The Data From 2019.11 to 2020.6.13', 2, 'The Data From 2019.11 to 2020.6.13', 3, 1, 'https://gitlab.com/winner_trading/ballet/-/issues/1');
 INSERT INTO `task` VALUES (5, 'Design CyberLife Database', 11, 'Design CyberLife Database', 0, 0, '');
 INSERT INTO `task` VALUES (6, 'Develop CloudLab Webapp', 12, 'Develop CloudLab webapp', 0, 0, '');
+INSERT INTO `task` VALUES (7, 'The Data From 2020.5.23-5.31', 2, 'The Data From 2020.5.23-5.31, convert from tb-cvs', 4, 0, 'https://gitlab.com/winner_trading/ballet/-/issues/2');
+INSERT INTO `task` VALUES (8, 'The Data From 2020.6.1-now', 2, 'The Data From 2020.6.1-now', 4, 0, '');
+INSERT INTO `task` VALUES (9, 'The DataReceiver Did not work', 2, 'The DataReceiver Did not work', 3, 0, 'https://gitlab.com/winner_trading/ballet/-/issues/4');
+INSERT INTO `task` VALUES (10, 'The Data 2020.FEB', 2, 'The Data 2020.FEB', 4, 0, 'https://gitlab.com/winner_trading/ballet/-/issues/5');
+INSERT INTO `task` VALUES (11, 'The Data 2019.11-2019.12', 2, 'The Data 2019.11-2019.12', 4, 0, 'https://gitlab.com/winner_trading/ballet/-/issues/6');
+INSERT INTO `task` VALUES (12, 'The Total Data', 2, 'The Total Data', 4, 0, 'https://gitlab.com/winner_trading/ballet/-/issues/7');
 
 -- ----------------------------
 -- Table structure for tdepend
@@ -491,6 +497,7 @@ CREATE TABLE `tomato`  (
 -- ----------------------------
 -- Records of tomato
 -- ----------------------------
+INSERT INTO `tomato` VALUES (1, '2020-06-14 21:52:27', '2020-06-14 22:24:24', 25, 2, 0, 0, '');
 
 -- ----------------------------
 -- Table structure for tschedule
