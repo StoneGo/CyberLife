@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 14/06/2020 10:36:48
+ Date: 14/06/2020 13:00:17
 */
 
 SET NAMES utf8mb4;
@@ -28,17 +28,9 @@ CREATE TABLE `action`  (
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Content',
   `tid` int(0) UNSIGNED NOT NULL COMMENT 'Task ID',
   `percent` double NOT NULL DEFAULT 0 COMMENT 'Complete Percent',
-  `perfomence` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Perfomence',
-  `emotion` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Emotion',
-  `health` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Health',
   `stime` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT 'Start Time',
   `etime` datetime(0) NULL DEFAULT NULL COMMENT 'EndTime',
   `hid` int(0) UNSIGNED NOT NULL COMMENT 'Operator',
-  `scheduled` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Y' COMMENT 'Is scheduled?',
-  `whynoplan` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Why do you no schedule?',
-  `star` int(0) UNSIGNED NULL DEFAULT 0 COMMENT 'rating for action',
-  `starwhy` int(0) NULL DEFAULT 0 COMMENT 'the reason for star',
-  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT 'the comments ',
   PRIMARY KEY (`aid`) USING BTREE,
   INDEX `fk_action_task`(`tid`) USING BTREE,
   INDEX `fk_action_human`(`hid`) USING BTREE,
@@ -250,7 +242,7 @@ INSERT INTO `project` VALUES (5, 'Painting', 'The Visullazation Componets And Fr
 INSERT INTO `project` VALUES (6, 'Health', 'The Health', 'private', '', 0, '2020-06-13 20:00:33');
 INSERT INTO `project` VALUES (7, 'Family', 'Family', 'private', '', 0, '2020-06-13 20:01:25');
 INSERT INTO `project` VALUES (8, 'Social', 'Social', 'private', '', 0, '2020-06-13 20:02:36');
-INSERT INTO `project` VALUES (9, 'Study', 'Study', 'public', '', 0, '2020-06-13 20:17:45');
+INSERT INTO `project` VALUES (9, 'Study', 'Study', 'private', '', 0, '2020-06-14 12:46:16');
 
 -- ----------------------------
 -- Table structure for pschedule
@@ -284,27 +276,38 @@ DROP TABLE IF EXISTS `rateaction`;
 CREATE TABLE `rateaction`  (
   `raid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
   `aid` int(0) UNSIGNED NOT NULL COMMENT 'action id',
-  `d1` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d1',
-  `d1why` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'the reason for d1',
-  `d1comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'the comments for d1',
-  `d2` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d2',
-  `d2why` int(0) NULL DEFAULT NULL COMMENT 'the reason for d2',
-  `d2comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT 'the comments for d2',
-  `d3` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d3',
-  `d3why` int(0) NULL DEFAULT NULL COMMENT 'the reason for d3',
-  `d3comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'the comments for d3',
-  `d4` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d4',
-  `d4why` int(0) NULL DEFAULT NULL COMMENT 'the reason for d4',
-  `d4comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'the comments for d4',
-  `d5` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d5',
-  `d5why` int(0) NULL DEFAULT NULL COMMENT 'the reason for d5',
-  `d5comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'the comments for d5',
+  `perfomence` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Perfomence',
+  `emotion` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Emotion',
+  `health` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Health',
+  `scheduled` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Y' COMMENT 'Is scheduled?',
+  `whynoplan` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Why do you no schedule?',
+  `star` int(0) UNSIGNED NULL DEFAULT 0 COMMENT 'rating for action',
+  `starwhy` int(0) NULL DEFAULT 0 COMMENT 'the reason for star',
+  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT 'the comments ',
   PRIMARY KEY (`raid`) USING BTREE,
-  INDEX `fk_rateaction_action`(`aid`) USING BTREE
+  INDEX `fk_rateaction_action`(`aid`) USING BTREE,
+  CONSTRAINT `fk_rate_action` FOREIGN KEY (`aid`) REFERENCES `action` (`aid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of rateaction
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for rateskill
+-- ----------------------------
+DROP TABLE IF EXISTS `rateskill`;
+CREATE TABLE `rateskill`  (
+  `rskid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `skid` int(0) NOT NULL,
+  `rate` int(0) UNSIGNED NOT NULL DEFAULT 0,
+  `comment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `rtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
+  PRIMARY KEY (`rskid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of rateskill
 -- ----------------------------
 
 -- ----------------------------
@@ -323,6 +326,22 @@ CREATE TABLE `role`  (
 -- ----------------------------
 INSERT INTO `role` VALUES (1, 'Developer', 'Developer');
 INSERT INTO `role` VALUES (2, 'Manager', 'Management');
+
+-- ----------------------------
+-- Table structure for skill
+-- ----------------------------
+DROP TABLE IF EXISTS `skill`;
+CREATE TABLE `skill`  (
+  `skid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Skill ID',
+  `skill` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Skill Name',
+  `level` int(0) NOT NULL DEFAULT 0 COMMENT 'The Skill Level',
+  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  PRIMARY KEY (`skid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of skill
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for task
@@ -459,6 +478,25 @@ CREATE TABLE `tschedule`  (
 
 -- ----------------------------
 -- Records of tschedule
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for tsk
+-- ----------------------------
+DROP TABLE IF EXISTS `tsk`;
+CREATE TABLE `tsk`  (
+  `tskid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tid` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Task ID',
+  `skid` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Skill ID',
+  PRIMARY KEY (`tskid`) USING BTREE,
+  INDEX `fk_tsk_task`(`tid`) USING BTREE,
+  INDEX `fk_tsk_skill`(`skid`) USING BTREE,
+  CONSTRAINT `fk_tsk_skill` FOREIGN KEY (`skid`) REFERENCES `skill` (`skid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_tsk_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tsk
 -- ----------------------------
 
 -- ----------------------------
