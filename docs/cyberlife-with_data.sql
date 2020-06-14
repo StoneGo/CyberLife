@@ -1,17 +1,17 @@
 /*
- Navicat Premium Data Transfer
+ Navicat MySQL Data Transfer
 
- Source Server         : CyberLife
+ Source Server         : cyberlife
  Source Server Type    : MySQL
  Source Server Version : 80020
- Source Host           : localhost:33996
+ Source Host           : localhost:33369
  Source Schema         : cyberlife
 
  Target Server Type    : MySQL
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 13/06/2020 20:18:17
+ Date: 14/06/2020 10:36:48
 */
 
 SET NAMES utf8mb4;
@@ -23,6 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `action`;
 CREATE TABLE `action`  (
   `aid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Action ID',
+  `bid` int(0) UNSIGNED NOT NULL COMMENT 'Behavior',
   `aname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Action Name',
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Content',
   `tid` int(0) UNSIGNED NOT NULL COMMENT 'Task ID',
@@ -41,13 +42,31 @@ CREATE TABLE `action`  (
   PRIMARY KEY (`aid`) USING BTREE,
   INDEX `fk_action_task`(`tid`) USING BTREE,
   INDEX `fk_action_human`(`hid`) USING BTREE,
-  CONSTRAINT `fk_action_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `fk_action_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+  INDEX `fk_action_behavior`(`bid`) USING BTREE,
+  CONSTRAINT `fk_action_behavior` FOREIGN KEY (`bid`) REFERENCES `behavior` (`bid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_action_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_action_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of action
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for behavior
+-- ----------------------------
+DROP TABLE IF EXISTS `behavior`;
+CREATE TABLE `behavior`  (
+  `bid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `bname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  PRIMARY KEY (`bid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of behavior
+-- ----------------------------
+INSERT INTO `behavior` VALUES (1, 'slow walk', 'normal walk, slow');
 
 -- ----------------------------
 -- Table structure for gh
@@ -192,8 +211,8 @@ CREATE TABLE `plog`  (
   PRIMARY KEY (`lid`) USING BTREE,
   INDEX `fk_log_task`(`pid`) USING BTREE,
   INDEX `fk_plog_human`(`hid`) USING BTREE,
-  CONSTRAINT `fk_plog_project` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `fk_plog_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `fk_plog_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_plog_project` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -218,7 +237,7 @@ CREATE TABLE `project`  (
   `status` int(0) UNSIGNED NULL DEFAULT 0 COMMENT 'Not Start, In the zone, Fineshed, hang up, etc',
   `uptime` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`pid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of project
@@ -281,9 +300,8 @@ CREATE TABLE `rateaction`  (
   `d5why` int(0) NULL DEFAULT NULL COMMENT 'the reason for d5',
   `d5comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'the comments for d5',
   PRIMARY KEY (`raid`) USING BTREE,
-  INDEX `fk_rateaction_action`(`aid`) USING BTREE,
-  CONSTRAINT `fk_rateaction_action` FOREIGN KEY (`aid`) REFERENCES `action` (`aid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  INDEX `fk_rateaction_action`(`aid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of rateaction
@@ -329,6 +347,7 @@ CREATE TABLE `task`  (
 -- ----------------------------
 INSERT INTO `task` VALUES (1, 'Moduling Eureka', 1, 'Moduling Eureka', 0, 0, '');
 INSERT INTO `task` VALUES (2, 'Moduling Trade', 1, 'Moduling Trade', 0, 0, '');
+INSERT INTO `task` VALUES (3, 'Workout', 6, 'Workout', 0, 0, '');
 
 -- ----------------------------
 -- Table structure for tdepend
@@ -443,6 +462,43 @@ CREATE TABLE `tschedule`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for workout
+-- ----------------------------
+DROP TABLE IF EXISTS `workout`;
+CREATE TABLE `workout`  (
+  `wid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `bid` int(0) UNSIGNED NOT NULL DEFAULT 0,
+  `hid` int(0) UNSIGNED NOT NULL,
+  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `qpg` int(0) UNSIGNED NOT NULL DEFAULT 0,
+  `gnumber` int(0) UNSIGNED NOT NULL DEFAULT 0,
+  `amount` int(0) UNSIGNED NULL DEFAULT 0,
+  `stime` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+  `etime` datetime(0) NULL DEFAULT NULL,
+  `duration` int(0) UNSIGNED NULL DEFAULT 0,
+  `hb` int(0) UNSIGNED NULL DEFAULT NULL,
+  `star` int(0) UNSIGNED NULL DEFAULT 0,
+  `reason` int(0) UNSIGNED NULL DEFAULT 0,
+  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  PRIMARY KEY (`wid`) USING BTREE,
+  INDEX `fk_workout_behavior`(`bid`) USING BTREE,
+  INDEX `fk_workout_human`(`hid`) USING BTREE,
+  CONSTRAINT `fk_workout_behavior` FOREIGN KEY (`bid`) REFERENCES `behavior` (`bid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_workout_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of workout
+-- ----------------------------
+INSERT INTO `workout` VALUES (1, 1, 1, 'MtoZtoM', 3, 1, 3, '2020-06-14 08:26:37', '2020-06-14 09:16:42', 50, 80, 3, 3, '3 for no good sleep');
+
+-- ----------------------------
+-- View structure for v_action
+-- ----------------------------
+DROP VIEW IF EXISTS `v_action`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_action` AS select `a`.`aid` AS `aid`,`a`.`bid` AS `bid`,`a`.`aname` AS `aname`,`a`.`content` AS `content`,`a`.`tid` AS `tid`,`a`.`percent` AS `percent`,`a`.`perfomence` AS `perfomence`,`a`.`emotion` AS `emotion`,`a`.`health` AS `health`,`a`.`stime` AS `stime`,`a`.`etime` AS `etime`,`a`.`hid` AS `hid`,`a`.`scheduled` AS `scheduled`,`a`.`whynoplan` AS `whynoplan`,`a`.`star` AS `star`,`a`.`starwhy` AS `starwhy`,`a`.`comments` AS `comments`,`b`.`bname` AS `bname`,`h`.`human` AS `human`,`t`.`tname` AS `tname`,`t`.`pid` AS `pid`,`p`.`pname` AS `pname` from ((((`action` `a` join `behavior` `b` on((`a`.`bid` = `b`.`bid`))) join `human` `h` on((`a`.`hid` = `h`.`hid`))) join `task` `t` on((`a`.`tid` = `t`.`tid`))) join `project` `p` on((`t`.`pid` = `p`.`pid`)));
+
+-- ----------------------------
 -- View structure for v_pdepend
 -- ----------------------------
 DROP VIEW IF EXISTS `v_pdepend`;
@@ -489,5 +545,11 @@ CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_tgr` AS select `tgr`.`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_thr`;
 CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_thr` AS select `thr`.`thid` AS `thid`,`thr`.`tid` AS `tid`,`thr`.`hid` AS `hid`,`t`.`tname` AS `tname`,`t`.`pid` AS `pid`,`h`.`human` AS `human`,`thr`.`rid` AS `rid`,`r`.`rname` AS `rname`,`p`.`pname` AS `pname` from ((((`thr` join `task` `t` on((`thr`.`tid` = `t`.`tid`))) join `human` `h` on((`thr`.`hid` = `h`.`hid`))) join `role` `r` on((`thr`.`rid` = `r`.`rid`))) join `project` `p` on((`t`.`pid` = `p`.`pid`)));
+
+-- ----------------------------
+-- View structure for v_workout
+-- ----------------------------
+DROP VIEW IF EXISTS `v_workout`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_workout` AS select `w`.`wid` AS `wid`,`w`.`bid` AS `bid`,`w`.`hid` AS `hid`,`w`.`content` AS `content`,`w`.`qpg` AS `qpg`,`w`.`gnumber` AS `gnumber`,`w`.`amount` AS `amount`,`w`.`stime` AS `stime`,`w`.`etime` AS `etime`,`w`.`star` AS `star`,`w`.`reason` AS `reason`,`w`.`comments` AS `comments`,`b`.`bname` AS `bname`,`human`.`human` AS `human`,`w`.`duration` AS `duration`,`w`.`hb` AS `hb` from ((`workout` `w` join `behavior` `b` on((`w`.`bid` = `b`.`bid`))) join `human` on((`w`.`hid` = `human`.`hid`)));
 
 SET FOREIGN_KEY_CHECKS = 1;
