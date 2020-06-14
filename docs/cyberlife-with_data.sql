@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 14/06/2020 13:00:17
+ Date: 14/06/2020 13:47:08
 */
 
 SET NAMES utf8mb4;
@@ -453,6 +453,24 @@ CREATE TABLE `tlog`  (
 
 -- ----------------------------
 -- Records of tlog
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for tomato
+-- ----------------------------
+DROP TABLE IF EXISTS `tomato`;
+CREATE TABLE `tomato`  (
+  `tmtid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Tomato Id',
+  `durantion` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Tomato Time',
+  `aid` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Action ID',
+  `star` int(0) NULL DEFAULT 0 COMMENT 'Rating Star',
+  `reason` int(0) NULL DEFAULT 0 COMMENT 'Reason Why',
+  `comment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT 'Comment',
+  PRIMARY KEY (`tmtid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tomato
 -- ----------------------------
 
 -- ----------------------------
