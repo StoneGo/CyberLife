@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 14/06/2020 22:25:18
+ Date: 14/06/2020 23:16:22
 */
 
 SET NAMES utf8mb4;
@@ -41,8 +41,9 @@ CREATE TABLE `action`  (
 -- Records of action
 -- ----------------------------
 INSERT INTO `action` VALUES (1, 2, 'Design Cyberlife database', 'Design Cyberlife database', 5, 10, '2020-06-14 15:30:36', '2020-06-14 16:01:48');
-INSERT INTO `action` VALUES (2, 3, 'Find The Data In TBplus And HD', 'Find The Data In TBplus And HD', 4, 0, '2020-06-14 21:51:45', NULL);
+INSERT INTO `action` VALUES (2, 3, 'Find The Data In TBplus And HD', 'Find The Data In TBplus And HD', 4, 0, '2020-06-14 21:51:45', '2020-06-14 22:24:53');
 INSERT INTO `action` VALUES (3, 4, 'Debug CloudLab', 'Debug CloudLab', 6, 0, '2020-06-14 15:45:21', '2020-06-14 19:00:30');
+INSERT INTO `action` VALUES (4, 5, 'Observe Price Wave', 'Observe Price Wave, re group-5', 14, 10, '2020-06-14 22:45:58', '2020-06-14 22:55:01');
 
 -- ----------------------------
 -- Table structure for behavior
@@ -62,6 +63,7 @@ INSERT INTO `behavior` VALUES (1, 'slow walk', 'normal walk, slow');
 INSERT INTO `behavior` VALUES (2, 'Design Ralational Database', 'design database');
 INSERT INTO `behavior` VALUES (3, 'Data Mantainance', 'coding, convert, transpot');
 INSERT INTO `behavior` VALUES (4, 'Debug', 'Debug, Communication with User Or PM Or PM');
+INSERT INTO `behavior` VALUES (5, 'Observe Price Wave', 'Observe Price Wave');
 
 -- ----------------------------
 -- Table structure for gh
@@ -385,6 +387,8 @@ INSERT INTO `task` VALUES (9, 'The DataReceiver Did not work', 2, 'The DataRecei
 INSERT INTO `task` VALUES (10, 'The Data 2020.FEB', 2, 'The Data 2020.FEB', 4, 0, 'https://gitlab.com/winner_trading/ballet/-/issues/5');
 INSERT INTO `task` VALUES (11, 'The Data 2019.11-2019.12', 2, 'The Data 2019.11-2019.12', 4, 0, 'https://gitlab.com/winner_trading/ballet/-/issues/6');
 INSERT INTO `task` VALUES (12, 'The Total Data', 2, 'The Total Data', 4, 0, 'https://gitlab.com/winner_trading/ballet/-/issues/7');
+INSERT INTO `task` VALUES (13, 're group-5 branch', 1, 're group-5 branch', 1, 0, '');
+INSERT INTO `task` VALUES (14, 'observ group-5', 1, 'observ group-5', 13, 0, '');
 
 -- ----------------------------
 -- Table structure for tdepend
