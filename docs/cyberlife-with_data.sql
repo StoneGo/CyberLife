@@ -1,17 +1,17 @@
 /*
- Navicat MySQL Data Transfer
+ Navicat Premium Data Transfer
 
- Source Server         : cyberlife
+ Source Server         : CyberLife
  Source Server Type    : MySQL
  Source Server Version : 80020
- Source Host           : localhost:33369
+ Source Host           : localhost:33996
  Source Schema         : cyberlife
 
  Target Server Type    : MySQL
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 13/06/2020 18:21:18
+ Date: 13/06/2020 20:18:17
 */
 
 SET NAMES utf8mb4;
@@ -26,10 +26,24 @@ CREATE TABLE `action`  (
   `aname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Action Name',
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Content',
   `tid` int(0) UNSIGNED NOT NULL COMMENT 'Task ID',
+  `percent` double NOT NULL DEFAULT 0 COMMENT 'Complete Percent',
+  `perfomence` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Perfomence',
+  `emotion` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Emotion',
+  `health` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Health',
+  `stime` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT 'Start Time',
+  `etime` datetime(0) NULL DEFAULT NULL COMMENT 'EndTime',
+  `hid` int(0) UNSIGNED NOT NULL COMMENT 'Operator',
+  `scheduled` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Y' COMMENT 'Is scheduled?',
+  `whynoplan` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Why do you no schedule?',
+  `star` int(0) UNSIGNED NULL DEFAULT 0 COMMENT 'rating for action',
+  `starwhy` int(0) NULL DEFAULT 0 COMMENT 'the reason for star',
+  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT 'the comments ',
   PRIMARY KEY (`aid`) USING BTREE,
   INDEX `fk_action_task`(`tid`) USING BTREE,
-  CONSTRAINT `fk_action_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  INDEX `fk_action_human`(`hid`) USING BTREE,
+  CONSTRAINT `fk_action_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_action_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of action
@@ -99,7 +113,7 @@ CREATE TABLE `pdepend`  (
   `pid` int(0) UNSIGNED NOT NULL DEFAULT 0,
   `dpid` int(0) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`pdid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of pdepend
@@ -174,19 +188,22 @@ CREATE TABLE `plog`  (
   `target_type` int(0) NULL DEFAULT 0 COMMENT 'Target Type',
   `content` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'content',
   `dt` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'log time',
+  `hid` int(0) UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`lid`) USING BTREE,
   INDEX `fk_log_task`(`pid`) USING BTREE,
-  CONSTRAINT `fk_plog_project` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  INDEX `fk_plog_human`(`hid`) USING BTREE,
+  CONSTRAINT `fk_plog_project` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_plog_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of plog
 -- ----------------------------
-INSERT INTO `plog` VALUES (1, 1, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-12 18:44:37');
-INSERT INTO `plog` VALUES (2, 2, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-12 18:44:49');
-INSERT INTO `plog` VALUES (3, 3, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-12 18:44:59');
-INSERT INTO `plog` VALUES (4, 1, 2, 'PGR', 1, 0, 'P1<-G1', '2020-06-12 20:16:54');
-INSERT INTO `plog` VALUES (5, 1, 2, 'PGR', 2, 0, 'P1<-G2', '2020-06-12 20:17:20');
+INSERT INTO `plog` VALUES (1, 1, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-13 19:56:10', 1);
+INSERT INTO `plog` VALUES (2, 2, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-13 19:56:11', 1);
+INSERT INTO `plog` VALUES (3, 3, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-13 19:56:11', 1);
+INSERT INTO `plog` VALUES (4, 1, 2, 'PGR', 1, 0, 'P1<-G1', '2020-06-13 19:56:12', 1);
+INSERT INTO `plog` VALUES (5, 1, 2, 'PGR', 2, 0, 'P1<-G2', '2020-06-13 19:56:15', 1);
 
 -- ----------------------------
 -- Table structure for project
@@ -198,17 +215,23 @@ CREATE TABLE `project`  (
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Project Content',
   `pptype` enum('public','private') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'public',
   `repository` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `status` int(0) UNSIGNED NULL DEFAULT 0 COMMENT 'Not Start, In the zone, Fineshed, hang up, etc',
+  `uptime` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of project
 -- ----------------------------
-INSERT INTO `project` VALUES (1, 'Eureka', 'Eureka Math Moduling', 'public', '');
-INSERT INTO `project` VALUES (2, 'Winning', 'Winning Trade Software', 'public', '');
-INSERT INTO `project` VALUES (3, 'SpaceForce', 'SpaceForce IDE (Integrated Development Environment)', 'public', '');
-INSERT INTO `project` VALUES (4, 'Numen', 'Bodyguard Of The System', 'public', '');
-INSERT INTO `project` VALUES (5, 'Painting', 'The Visullazation Componets And Framework', 'public', '');
+INSERT INTO `project` VALUES (1, 'Eureka', 'Eureka Math Moduling', 'public', '', 0, '2020-06-13 19:54:50');
+INSERT INTO `project` VALUES (2, 'Winning', 'Winning Trade Software', 'public', '', 0, '2020-06-13 19:54:50');
+INSERT INTO `project` VALUES (3, 'SpaceForce', 'SpaceForce IDE (Integrated Development Environment)', 'public', '', 0, '2020-06-13 19:54:50');
+INSERT INTO `project` VALUES (4, 'Numen', 'Bodyguard Of The System', 'public', '', 0, '2020-06-13 19:54:50');
+INSERT INTO `project` VALUES (5, 'Painting', 'The Visullazation Componets And Framework', 'public', '', 0, '2020-06-13 19:54:50');
+INSERT INTO `project` VALUES (6, 'Health', 'The Health', 'private', '', 0, '2020-06-13 20:00:33');
+INSERT INTO `project` VALUES (7, 'Family', 'Family', 'private', '', 0, '2020-06-13 20:01:25');
+INSERT INTO `project` VALUES (8, 'Social', 'Social', 'private', '', 0, '2020-06-13 20:02:36');
+INSERT INTO `project` VALUES (9, 'Study', 'Study', 'public', '', 0, '2020-06-13 20:17:45');
 
 -- ----------------------------
 -- Table structure for pschedule
@@ -233,6 +256,37 @@ CREATE TABLE `pschedule`  (
 
 -- ----------------------------
 -- Records of pschedule
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for rateaction
+-- ----------------------------
+DROP TABLE IF EXISTS `rateaction`;
+CREATE TABLE `rateaction`  (
+  `raid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `aid` int(0) UNSIGNED NOT NULL COMMENT 'action id',
+  `d1` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d1',
+  `d1why` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'the reason for d1',
+  `d1comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'the comments for d1',
+  `d2` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d2',
+  `d2why` int(0) NULL DEFAULT NULL COMMENT 'the reason for d2',
+  `d2comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT 'the comments for d2',
+  `d3` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d3',
+  `d3why` int(0) NULL DEFAULT NULL COMMENT 'the reason for d3',
+  `d3comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'the comments for d3',
+  `d4` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d4',
+  `d4why` int(0) NULL DEFAULT NULL COMMENT 'the reason for d4',
+  `d4comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'the comments for d4',
+  `d5` int(0) UNSIGNED NULL DEFAULT NULL COMMENT 'rating for d5',
+  `d5why` int(0) NULL DEFAULT NULL COMMENT 'the reason for d5',
+  `d5comm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'the comments for d5',
+  PRIMARY KEY (`raid`) USING BTREE,
+  INDEX `fk_rateaction_action`(`aid`) USING BTREE,
+  CONSTRAINT `fk_rateaction_action` FOREIGN KEY (`aid`) REFERENCES `action` (`aid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of rateaction
 -- ----------------------------
 
 -- ----------------------------
@@ -285,7 +339,7 @@ CREATE TABLE `tdepend`  (
   `tid` int(0) UNSIGNED NOT NULL DEFAULT 0,
   `dtid` int(0) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`tdid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tdepend
@@ -351,9 +405,12 @@ CREATE TABLE `tlog`  (
   `target_type` int(0) NULL DEFAULT 0 COMMENT 'Target Type',
   `aname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Action Name',
   `content` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'content',
+  `hid` int(0) UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`lid`) USING BTREE,
   INDEX `fk_log_task`(`tid`) USING BTREE,
-  CONSTRAINT `fk_log_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  INDEX `fk_tlog_human`(`hid`) USING BTREE,
+  CONSTRAINT `fk_tlog_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_tlog_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
