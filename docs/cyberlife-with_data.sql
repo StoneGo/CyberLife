@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 14/06/2020 14:20:27
+ Date: 14/06/2020 19:26:53
 */
 
 SET NAMES utf8mb4;
@@ -40,6 +40,9 @@ CREATE TABLE `action`  (
 -- ----------------------------
 -- Records of action
 -- ----------------------------
+INSERT INTO `action` VALUES (1, 2, 'Design Cyberlife database', 'Design Cyberlife database', 5, 10, '2020-06-14 15:30:36', '2020-06-14 16:01:48');
+INSERT INTO `action` VALUES (2, 3, 'Maintenance Data For Ballet', 'Design Cyberlife database', 4, 0, '2020-06-14 16:05:13', NULL);
+INSERT INTO `action` VALUES (3, 4, 'Debug CloudLab', 'Debug CloudLab', 6, 0, '2020-06-14 15:45:21', '2020-06-14 17:00:30');
 
 -- ----------------------------
 -- Table structure for behavior
@@ -56,6 +59,9 @@ CREATE TABLE `behavior`  (
 -- Records of behavior
 -- ----------------------------
 INSERT INTO `behavior` VALUES (1, 'slow walk', 'normal walk, slow');
+INSERT INTO `behavior` VALUES (2, 'Design Ralational Database', 'design database');
+INSERT INTO `behavior` VALUES (3, 'Data Mantainance', 'coding, convert, transpot');
+INSERT INTO `behavior` VALUES (4, 'Debug', 'Debug, Communication with User Or PM Or PM');
 
 -- ----------------------------
 -- Table structure for gh
@@ -212,6 +218,9 @@ INSERT INTO `plog` VALUES (2, 2, 1, 'Created Project', 0, 0, 'Created Project', 
 INSERT INTO `plog` VALUES (3, 3, 1, 'Created Project', 0, 0, 'Created Project', '2020-06-13 19:56:11', 1);
 INSERT INTO `plog` VALUES (4, 1, 2, 'PGR', 1, 0, 'P1<-G1', '2020-06-13 19:56:12', 1);
 INSERT INTO `plog` VALUES (5, 1, 2, 'PGR', 2, 0, 'P1<-G2', '2020-06-13 19:56:15', 1);
+INSERT INTO `plog` VALUES (6, 2, 3, 'Change Project Propertis', 0, 0, 'Change Name to Ballet', '2020-06-14 15:30:21', 1);
+INSERT INTO `plog` VALUES (7, 10, 1, 'Created Project', 0, 0, 'Create Project Winning', '2020-06-14 15:31:10', 1);
+INSERT INTO `plog` VALUES (8, 11, 1, 'Created Project', 0, 0, 'Created Project Cyberlife', '2020-06-14 15:58:41', 1);
 
 -- ----------------------------
 -- Table structure for project
@@ -231,8 +240,8 @@ CREATE TABLE `project`  (
 -- ----------------------------
 -- Records of project
 -- ----------------------------
-INSERT INTO `project` VALUES (1, 'Eureka', 'Eureka Math Moduling', 'public', '', 0, '2020-06-13 19:54:50');
-INSERT INTO `project` VALUES (2, 'Winning', 'Winning Trade Software', 'public', '', 0, '2020-06-13 19:54:50');
+INSERT INTO `project` VALUES (1, 'Eureka', 'Eureka Math Moduling', 'public', '', 1, '2020-06-14 15:28:38');
+INSERT INTO `project` VALUES (2, 'Ballet', 'CTP Interfaces And Utilits', 'public', 'https://gitlab.com/winner_trading/ballet', 1, '2020-06-14 15:29:14');
 INSERT INTO `project` VALUES (3, 'SpaceForce', 'SpaceForce IDE (Integrated Development Environment)', 'public', '', 0, '2020-06-13 19:54:50');
 INSERT INTO `project` VALUES (4, 'Numen', 'Bodyguard Of The System', 'public', '', 0, '2020-06-13 19:54:50');
 INSERT INTO `project` VALUES (5, 'Painting', 'The Visullazation Componets And Framework', 'public', '', 0, '2020-06-13 19:54:50');
@@ -240,6 +249,9 @@ INSERT INTO `project` VALUES (6, 'Health', 'The Health', 'private', '', 0, '2020
 INSERT INTO `project` VALUES (7, 'Family', 'Family', 'private', '', 0, '2020-06-13 20:01:25');
 INSERT INTO `project` VALUES (8, 'Social', 'Social', 'private', '', 0, '2020-06-13 20:02:36');
 INSERT INTO `project` VALUES (9, 'Study', 'Study', 'private', '', 0, '2020-06-14 12:46:16');
+INSERT INTO `project` VALUES (10, 'Winning', 'Winning Trade Software', 'public', '', 0, '2020-06-14 15:29:36');
+INSERT INTO `project` VALUES (11, 'CyberLift', 'CyberLife Software', 'public', 'https://github.com/StoneGo/CyberLife', 1, '2020-06-14 15:58:03');
+INSERT INTO `project` VALUES (12, 'CloudLab Webapp', 'CloudLab Webapp', 'public', 'https://github.com/CloudLab-BIT/webapp', 1, '2020-06-14 16:53:32');
 
 -- ----------------------------
 -- Table structure for pschedule
@@ -363,7 +375,10 @@ CREATE TABLE `task`  (
 -- ----------------------------
 INSERT INTO `task` VALUES (1, 'Moduling Eureka', 1, 'Moduling Eureka', 0, 0, '');
 INSERT INTO `task` VALUES (2, 'Moduling Trade', 1, 'Moduling Trade', 0, 0, '');
-INSERT INTO `task` VALUES (3, 'Workout', 6, 'Workout', 0, 0, '');
+INSERT INTO `task` VALUES (3, 'Basic Data Service', 2, 'Trans Data From TBplus To csv, then covert to tick bin', 0, 0, '');
+INSERT INTO `task` VALUES (4, 'The Data From 2019.11 to 2020.6.13', 2, 'The Data From 2019.11 to 2020.6.13', 3, 1, 'https://gitlab.com/winner_trading/ballet/-/issues/1');
+INSERT INTO `task` VALUES (5, 'Design CyberLife Database', 11, 'Design CyberLife Database', 0, 0, '');
+INSERT INTO `task` VALUES (6, 'Develop CloudLab Webapp', 12, 'Develop CloudLab webapp', 0, 0, '');
 
 -- ----------------------------
 -- Table structure for tdepend
@@ -433,15 +448,16 @@ INSERT INTO `thr` VALUES (2, 2, 1, 1);
 -- ----------------------------
 DROP TABLE IF EXISTS `tlog`;
 CREATE TABLE `tlog`  (
-  `lid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Log ID',
-  `tid` int(0) UNSIGNED NOT NULL COMMENT 'Task ID',
-  `action` int(0) NOT NULL COMMENT 'Action',
+  `tlid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Log ID',
+  `tid` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Task ID',
+  `action` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Action',
   `target_id` int(0) UNSIGNED NULL DEFAULT 0 COMMENT 'Target ID',
   `target_type` int(0) NULL DEFAULT 0 COMMENT 'Target Type',
-  `aname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'Action Name',
+  `aname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `dtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
   `content` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'content',
-  `hid` int(0) UNSIGNED NULL DEFAULT NULL,
-  PRIMARY KEY (`lid`) USING BTREE,
+  `hid` int(0) UNSIGNED NULL DEFAULT 0,
+  PRIMARY KEY (`tlid`) USING BTREE,
   INDEX `fk_log_task`(`tid`) USING BTREE,
   INDEX `fk_tlog_human`(`hid`) USING BTREE,
   CONSTRAINT `fk_tlog_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -451,6 +467,8 @@ CREATE TABLE `tlog`  (
 -- ----------------------------
 -- Records of tlog
 -- ----------------------------
+INSERT INTO `tlog` VALUES (1, 1, 1, 0, 0, 'Crate Task', '2020-06-14 15:34:27', '', 1);
+INSERT INTO `tlog` VALUES (2, 2, 1, 0, 0, 'Crate Task', '2020-06-14 15:34:41', '', 1);
 
 -- ----------------------------
 -- Table structure for tomato
