@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 14/06/2020 23:16:22
+ Date: 15/06/2020 02:00:56
 */
 
 SET NAMES utf8mb4;
@@ -44,6 +44,7 @@ INSERT INTO `action` VALUES (1, 2, 'Design Cyberlife database', 'Design Cyberlif
 INSERT INTO `action` VALUES (2, 3, 'Find The Data In TBplus And HD', 'Find The Data In TBplus And HD', 4, 0, '2020-06-14 21:51:45', '2020-06-14 22:24:53');
 INSERT INTO `action` VALUES (3, 4, 'Debug CloudLab', 'Debug CloudLab', 6, 0, '2020-06-14 15:45:21', '2020-06-14 19:00:30');
 INSERT INTO `action` VALUES (4, 5, 'Observe Price Wave', 'Observe Price Wave, re group-5', 14, 10, '2020-06-14 22:45:58', '2020-06-14 22:55:01');
+INSERT INTO `action` VALUES (5, 5, 'Observe Price Wave', 'Observe Price Wave re group-5', 14, 20, '2020-06-15 00:53:48', '2020-06-15 01:30:22');
 
 -- ----------------------------
 -- Table structure for behavior
