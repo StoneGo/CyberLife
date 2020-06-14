@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 14/06/2020 13:47:08
+ Date: 14/06/2020 14:20:27
 */
 
 SET NAMES utf8mb4;
@@ -30,13 +30,10 @@ CREATE TABLE `action`  (
   `percent` double NOT NULL DEFAULT 0 COMMENT 'Complete Percent',
   `stime` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT 'Start Time',
   `etime` datetime(0) NULL DEFAULT NULL COMMENT 'EndTime',
-  `hid` int(0) UNSIGNED NOT NULL COMMENT 'Operator',
   PRIMARY KEY (`aid`) USING BTREE,
   INDEX `fk_action_task`(`tid`) USING BTREE,
-  INDEX `fk_action_human`(`hid`) USING BTREE,
   INDEX `fk_action_behavior`(`bid`) USING BTREE,
   CONSTRAINT `fk_action_behavior` FOREIGN KEY (`bid`) REFERENCES `behavior` (`bid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `fk_action_human` FOREIGN KEY (`hid`) REFERENCES `human` (`hid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_action_task` FOREIGN KEY (`tid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
@@ -461,12 +458,16 @@ CREATE TABLE `tlog`  (
 DROP TABLE IF EXISTS `tomato`;
 CREATE TABLE `tomato`  (
   `tmtid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Tomato Id',
+  `stime` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+  `etime` datetime(0) NULL DEFAULT NULL,
   `durantion` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Tomato Time',
   `aid` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Action ID',
   `star` int(0) NULL DEFAULT 0 COMMENT 'Rating Star',
   `reason` int(0) NULL DEFAULT 0 COMMENT 'Reason Why',
   `comment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT 'Comment',
-  PRIMARY KEY (`tmtid`) USING BTREE
+  PRIMARY KEY (`tmtid`) USING BTREE,
+  INDEX `fk_tomato_action`(`aid`) USING BTREE,
+  CONSTRAINT `fk_tomato_action` FOREIGN KEY (`aid`) REFERENCES `action` (`aid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -552,7 +553,7 @@ INSERT INTO `workout` VALUES (1, 1, 1, 'MtoZtoM', 3, 1, 3, '2020-06-14 08:26:37'
 -- View structure for v_action
 -- ----------------------------
 DROP VIEW IF EXISTS `v_action`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_action` AS select `a`.`aid` AS `aid`,`a`.`bid` AS `bid`,`a`.`aname` AS `aname`,`a`.`content` AS `content`,`a`.`tid` AS `tid`,`a`.`percent` AS `percent`,`a`.`perfomence` AS `perfomence`,`a`.`emotion` AS `emotion`,`a`.`health` AS `health`,`a`.`stime` AS `stime`,`a`.`etime` AS `etime`,`a`.`hid` AS `hid`,`a`.`scheduled` AS `scheduled`,`a`.`whynoplan` AS `whynoplan`,`a`.`star` AS `star`,`a`.`starwhy` AS `starwhy`,`a`.`comments` AS `comments`,`b`.`bname` AS `bname`,`h`.`human` AS `human`,`t`.`tname` AS `tname`,`t`.`pid` AS `pid`,`p`.`pname` AS `pname` from ((((`action` `a` join `behavior` `b` on((`a`.`bid` = `b`.`bid`))) join `human` `h` on((`a`.`hid` = `h`.`hid`))) join `task` `t` on((`a`.`tid` = `t`.`tid`))) join `project` `p` on((`t`.`pid` = `p`.`pid`)));
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_action` AS select `a`.`aid` AS `aid`,`a`.`bid` AS `bid`,`a`.`aname` AS `aname`,`a`.`content` AS `content`,`a`.`tid` AS `tid`,`a`.`percent` AS `percent`,`a`.`stime` AS `stime`,`a`.`etime` AS `etime`,`b`.`bname` AS `bname`,`h`.`human` AS `human`,`t`.`tname` AS `tname`,`t`.`pid` AS `pid`,`p`.`pname` AS `pname`,`thr`.`hid` AS `hid`,`thr`.`rid` AS `rid`,`r`.`rname` AS `rname` from ((((((`action` `a` join `behavior` `b` on((`a`.`bid` = `b`.`bid`))) join `task` `t` on((`a`.`tid` = `t`.`tid`))) join `project` `p` on((`t`.`pid` = `p`.`pid`))) join `thr` on((`t`.`tid` = `thr`.`tid`))) join `human` `h` on((`thr`.`hid` = `h`.`hid`))) join `role` `r` on((`thr`.`rid` = `r`.`rid`)));
 
 -- ----------------------------
 -- View structure for v_pdepend
@@ -601,6 +602,12 @@ CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_tgr` AS select `tgr`.`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_thr`;
 CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_thr` AS select `thr`.`thid` AS `thid`,`thr`.`tid` AS `tid`,`thr`.`hid` AS `hid`,`t`.`tname` AS `tname`,`t`.`pid` AS `pid`,`h`.`human` AS `human`,`thr`.`rid` AS `rid`,`r`.`rname` AS `rname`,`p`.`pname` AS `pname` from ((((`thr` join `task` `t` on((`thr`.`tid` = `t`.`tid`))) join `human` `h` on((`thr`.`hid` = `h`.`hid`))) join `role` `r` on((`thr`.`rid` = `r`.`rid`))) join `project` `p` on((`t`.`pid` = `p`.`pid`)));
+
+-- ----------------------------
+-- View structure for v_tomato
+-- ----------------------------
+DROP VIEW IF EXISTS `v_tomato`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_tomato` AS select `tmt`.`tmtid` AS `tmtid`,`tmt`.`stime` AS `stime`,`tmt`.`etime` AS `etime`,`tmt`.`durantion` AS `durantion`,`tmt`.`aid` AS `aid`,`tmt`.`star` AS `star`,`tmt`.`reason` AS `reason`,`tmt`.`comment` AS `comment`,`a`.`aname` AS `aname`,`a`.`bid` AS `bid`,`a`.`tid` AS `tid`,`t`.`tname` AS `tname`,`t`.`pid` AS `pid`,`p`.`pname` AS `pname`,`thr`.`hid` AS `hid`,`thr`.`rid` AS `rid`,`r`.`rname` AS `rname` from ((((((`tomato` `tmt` join `action` `a` on((`tmt`.`aid` = `a`.`aid`))) join `behavior` `b` on((`a`.`bid` = `b`.`bid`))) join `task` `t` on((`a`.`tid` = `t`.`tid`))) join `project` `p` on((`t`.`pid` = `p`.`pid`))) join `thr` on((`t`.`tid` = `thr`.`tid`))) join `role` `r` on((`thr`.`rid` = `r`.`rid`)));
 
 -- ----------------------------
 -- View structure for v_workout
